@@ -3,7 +3,6 @@ package com.nhom44.services;
 import com.nhom44.DAO.ProjectDAO;
 import com.nhom44.bean.Project;
 import com.nhom44.db.JDBIConnector;
-import com.nhom44.util.DateUtil;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.*;
@@ -122,19 +121,23 @@ public class ProjectService {
     }
 
 
-
-
-
-    public List<Project> get8ActiveProjectHighestView(int id, int userid) {
-        //get Conection
-        //get 8 project highest view
-        List<Project> top8 = conn.withExtension(ProjectDAO.class, dao -> dao.get8ActiveProjectHighestView(id, userid));
-        for (Project p : top8) {
-            if (p.getSaveBy() == userid && p.getSaveBy() != 0) p.setSave(true);
-        }
+    public List<Project> get8ActiveProjectHighestView(int categoryId, int userid) {
+        //6.1.1 get8ActiveProjectHighestView
+        List<Project> top8 = conn.withExtension(ProjectDAO.class, dao -> dao.get8ActiveProjectHighestView(categoryId, userid));
+//        7. checkingsave
+        checkingSave(top8, userid);
         return top8;
     }
 
+    private void checkingSave(List<Project> projects, int userId) {
+//            duyệt qua danh sách dự án được trả về
+        for (Project p : projects)
+//            kiểm tra dự án có được đánh dấu bởi người dùng có cùng id không
+//            7.1.1 thiết lập trạng trái đã đánh dấu
+            if (p.getSaveBy() == userId && p.getSaveBy() != 0) p.setSave(true);
+//            7.2.1 thiết lập trạng trái không đánh dấu
+            else p.setSave(false);
+    }
 
     public boolean saveProject(int projectId, int userId) {
         return conn.withExtension(ProjectDAO.class, dao -> dao.saveProject(projectId, userId));
@@ -178,9 +181,7 @@ public class ProjectService {
 
     public List<Project> getHistoryUserProject(int id, int offset) {
         List<Project> projects = conn.withExtension(ProjectDAO.class, dao -> dao.getHistoryUserProject(id, offset));
-        for (Project p : projects) {
-            if (p.getSaveBy() == id && p.getSaveBy() != 0) p.setSave(true);
-        }
+        checkingSave(projects, id);
         return projects;
     }
 
@@ -189,23 +190,17 @@ public class ProjectService {
     }
 
 
-
     public boolean isLikeByUser(int userid, int postid) {
         return conn.withExtension(ProjectDAO.class, dao -> dao.isLikeByUser(userid, postid));
     }
 
     public List<Project> getAllProjectActive(int userId) {
-        List<Project> project= conn.withExtension(ProjectDAO.class, dao -> dao.getAllActive(userId));
-        for (Project p: project) {
+        List<Project> project = conn.withExtension(ProjectDAO.class, dao -> dao.getAllActive(userId));
+        for (Project p : project) {
             System.out.println(p.getSaveBy());
             if (p.getSaveBy() == userId && p.getSaveBy() != 0) p.setSave(true);
         }
         return project;
     }
-    public static void main(String[] args) {
-        for (Project p: ProjectService.getInstance().getAllProjectActive(1)
-             ) {
-            System.out.println(p.toString());
-        }
-    }
+
 }

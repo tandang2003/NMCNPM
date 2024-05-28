@@ -1,6 +1,7 @@
 package com.nhom44.api.web;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.nhom44.bean.*;
 import com.nhom44.services.CategoryService;
 import com.nhom44.services.ProjectService;
@@ -11,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -18,78 +20,87 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/api/home", "/api/home/projects/*", "/api/home/slides", "/api/home/categories", "/api/home/contact"})
 public class HomeController extends HttpServlet {
     private ResponseModel responseModel;
+    private HttpServletRequest req;
+    private HttpServletResponse resp;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.req = req;
+        this.resp = resp;
+//      2.1.1 lấy ra đường dẫn gốc đã gửi yêu cầu
         String url = req.getServletPath();
-        //create ResponseModel
+//      2.1.2 tạo ra đối tượng phản hồi
         responseModel = new ResponseModel();
-
+//      3.1 selectSuitableHandleForThePath
         selectSuitableHandleForThePath(url, req, resp, responseModel);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name", responseModel.getName());
+        jsonObject.add("data", new Gson().toJsonTree(responseModel.getData()));
         PrintWriter printWriter = resp.getWriter();
-        printWriter.print(new Gson().toJson(responseModel));
+        printWriter.print(jsonObject.toString());
         printWriter.flush();
         printWriter.close();
         return;
     }
 
-    private boolean dataExist(String data) {
-        return data != null && !data.equals("undefined");
-    }
 
+    //phương thức đùng để kiểm tra đường dẫn gốc và thực hiện hành vi xử lý tương ứng
     private void selectSuitableHandleForThePath(String path, HttpServletRequest req, HttpServletResponse resp, ResponseModel responseModel) throws
             IOException {
+//       tìm quy trình sử lý phù hợp với đường dẫn gốc
         switch (path) {
+            //tồn tài đường dấn gốc tương ứng
             case "/api/home/projects":
                 int categoryId;
-                //get data from url
-                String data = getData(req);
-                //validate data
-                if (dataExist(data)) {
-                    //data is exist
-                    categoryId = Integer.parseInt(data);
-                    //set data to session
-                    req.getSession().setAttribute("HomeFindingcategoryId", categoryId);
+//                3.1.1 lấy ra mã loại dự án từ đường dẫn yêu cầu
+                String data = req.getPathInfo().substring(1);
+//               4 kiểm tra mã có tồn tại va hợp lệ không
+                if (data != null && !data.equals("undefined")) {
+//                   4.1.1 thực hiện lưu mã dự án vào session
+                    req.getSession().setAttribute("HomeFindingcategoryId", data);
                 } else {
-                    //data is unexist
-                    categoryId = (int) req.getSession().getAttribute("HomeFindingcategoryId");
+//                   4.2.1 thực hiện lấy ra mã của loại dự án trước đó được lưu trên session
+                    data = (String) req.getSession().getAttribute("HomeFindingcategoryId");
                 }
-                //get 8 project highest view
-                User user = (User) req.getSession().getAttribute("auth");
-                List<Project> projects = ProjectService.getInstance().get8ActiveProjectHighestView(categoryId, user == null ? 0 : user.getId());
-                //updateResponseModel
-                updateResponseModel("success", projects);
+//              5 getUserId
+                int userId = getUserId(req);
+//                6 get8ActiveProjectHighestView
+                List<Project> projects = ProjectService.getInstance().get8ActiveProjectHighestView(Integer.parseInt(data), userId);
+//                8 updateResponseModel
+                updateResponseModel(200, "success", projects);
 //                responseModel.setName("success");
 //                responseModel.setData(projects);
-                resp.setStatus(200);
                 break;
             case "/api/home/slides":
                 System.out.println("get slides");
                 List<Slider> sliders = SliderService.getInstance().getAllActive();
-                updateResponseModel("success", sliders);
+                updateResponseModel(200, "success", sliders);
 //                responseModel.setName("success");
 //                responseModel.setData(sliders);
-                resp.setStatus(200);
                 break;
             case "/api/home/categories":
                 List<Category> categories = CategoryService.getInstance().getAllActiveOrderByNumOfViews();
-                updateResponseModel("success", categories);
+                updateResponseModel(200, "success", categories);
 //                responseModel.setName("success");
 //                responseModel.setData(categories);
-                resp.setStatus(200);
                 break;
             default:
-                resp.setStatus(400);
-                updateResponseModel("error", "url not found");
+//                3.2 updateResponseModel
+                updateResponseModel(400, "error", "url not found");
                 break;
         }
     }
 
-    private void updateResponseModel(String name, Object data) {
+    private void updateResponseModel(int status, String name, Object data) {
+        resp.setStatus(status);
         responseModel.setName(name);
         responseModel.setData(data);
     }
-    private String getData(HttpServletRequest req) {
-        return req.getPathInfo().substring(1);
+
+    private int getUserId(HttpServletRequest req) {
+        User user = (User) req.getSession().getAttribute("auth");
+//        5.1.1 người dùng đã đăng nhập nên lấy ra id người dùng
+//        5.2.1 người dùng chưa đăng nhập nên trả về id bằng 0
+        return user == null ? 0 : user.getId();
     }
 }

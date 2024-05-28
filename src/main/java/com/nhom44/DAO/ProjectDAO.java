@@ -136,7 +136,7 @@ public interface ProjectDAO {
             "WHERE p.categoryId =:id AND p.isAccepted=1 AND p.status=1 AND c.status = 1 " +
             "GROUP BY p.id, p.title, p.description, p.avatar " +
             "ORDER BY COUNT(p.id) desc LIMIT 8")
-    List<Project> get8ActiveProjectHighestView(@Bind("id") int id, @Bind("userid") int userid);
+    List<Project> get8ActiveProjectHighestView(@Bind("id") int categoryId, @Bind("userid") int userid);
 
     @SqlUpdate("UPDATE users_projects SET userId=:id1, updatedAt=now() WHERE projectId=:id")
     int updateProjectForUser(@Bind("id") int id, @Bind("id1") int id1);

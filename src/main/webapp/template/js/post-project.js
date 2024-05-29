@@ -89,7 +89,6 @@ $.ajax({
     }
 })
 
-
 let allFiles = [];
 let form = document.getElementsByClassName("form-img");
 let input = document.getElementById("file_input");

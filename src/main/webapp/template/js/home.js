@@ -118,7 +118,6 @@ function saveContact() {
 
 
 // 0  người dùng ấn nút loại dự án có trên màn hình
-// 1.1 ClickCategory
 function ClickCategory(id) {
     // 1.1.1 thực hiện tạo đường dẫn đich với thông tin id của lại dự án được chọn
     endPoint = "/api/home/projects/" + id
@@ -130,7 +129,7 @@ function ClickCategory(id) {
             resdata = JSON.parse(data).data
             console.log(resdata)
             let list = resdata
-            // 9 displayProjects
+            // 9.1.2 biễu diễn danh sách dự án
             displayProjects(list)
         },
         error: function (data) {

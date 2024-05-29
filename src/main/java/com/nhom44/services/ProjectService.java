@@ -121,11 +121,12 @@ public class ProjectService {
     }
 
 
-    public List<Project> get8ActiveProjectHighestView(int categoryId, int userid) {
-        //6.1.1 get8ActiveProjectHighestView
-        List<Project> top8 = conn.withExtension(ProjectDAO.class, dao -> dao.get8ActiveProjectHighestView(categoryId, userid));
-//        7. checkingsave
-        checkingSave(top8, userid);
+    public List<Project> get8ActiveProjectHighestView(int categoryId, int userId) {
+        //6.1.1 hệ thóng thực hiệ lấy ra 8 dự án có số người dùng xem thông chi tiết nhiều nhất(get8ActiveProjectHighestView(categoryId,userId)
+//        trả về danh sách 8 dự án có nhiều người xem nhất của loại dự án
+        List<Project> top8 = conn.withExtension(ProjectDAO.class, dao -> dao.get8ActiveProjectHighestView(categoryId, userId));
+//         7. kiểm tra trong danh sách các dự án được lấy ra người dùng có đánh dấu dự án nào chưa(checkSave(top8, userId))
+        checkingSave(top8, userId);
         return top8;
     }
 
@@ -133,9 +134,9 @@ public class ProjectService {
 //            duyệt qua danh sách dự án được trả về
         for (Project p : projects)
 //            kiểm tra dự án có được đánh dấu bởi người dùng có cùng id không
-//            7.1.1 thiết lập trạng trái đã đánh dấu
+//           7.1.1  Nếu người dùng đã đánh dấu thì sẽ thay đổi trạng thái của dự án thành đã lưu
             if (p.getSaveBy() == userId && p.getSaveBy() != 0) p.setSave(true);
-//            7.2.1 thiết lập trạng trái không đánh dấu
+//           7.2.1  Nếu người dùng không đánh dấu thì sẽ thay đổi trạng thái của dự án thành không lưu
             else p.setSave(false);
     }
 

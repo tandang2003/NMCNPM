@@ -206,9 +206,4 @@ public class ProjectService {
         return conn.withExtension(ProjectDAO.class, dao -> dao.getAllActiveId());
     }
 
-    public static void main(String[] args) {
-        ProjectService projectService = ProjectService.getInstance();
-        List<Integer> projects = projectService.getAllProjectActiveId();
-        System.out.println(projects);
-    }
 }

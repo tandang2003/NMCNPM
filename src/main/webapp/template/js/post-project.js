@@ -2,6 +2,91 @@ $(document).ready(function () {
 
 
 });
+let id = window.location.href.substring(window.location.href.lastIndexOf('/'))
+$.ajax({
+    //thông tin dự án
+    url: '/api/post/project' + id,
+    dataType: 'json',
+    type: 'GET',
+    success: function (data) {
+        let project = data.data
+        document.title = project.title
+        $('.project-title').text(project.title)
+        $('.project-updatedAt').text(project.updatedAt)
+        $('.project-category').text(project.category)
+        $('.project-id').text(project.id)
+
+    },
+})
+$.ajax({
+    //thông tin bài viết
+    url: "/api/post/project" + id + "/post",
+    type: "GET",
+    dataType: 'json',
+    success: function (data) {
+        let post = data.data
+        $('.post-content-text').html(post.content+$('.post-content-text').html())
+    },
+})
+$.ajax({
+    // thông tin gallery
+    url: "/api/post/project" + id + "/gallery",
+    type: "GET",
+    dataType: 'json',
+    success: function (data) {
+        let gallery = data.data
+        gallery.forEach((e, i) => {
+            $('.gallery').append(`<div class="img position-relative w-100 h-100 overflow-hidden ">
+                    <img class="" src="${e}" alt="Image">
+                    </div>`)
+        })
+        console.log($('.gallery').html())
+    },
+})
+$.ajax({
+    url: "/api/post/project" + id + "/services",
+    type: "GET",
+    dataType: 'json',
+    success: function (data) {
+        let services = data.data
+        console.log(services)
+        services.forEach((e, i) => {
+            $('.project-services').append(`${e.name}`)
+            if (i != services.length - 1)
+                $('.project-services').append(`, `)
+        })
+    },
+})
+$.ajax({
+    url: '/api/post/project' + id + '/suggest',
+    type: 'GET',
+    dataType: 'json',
+    success: function (data) {
+        let suggestProjects = data.data
+        console.log(suggestProjects)
+        suggestProjects.forEach((e, i) => {
+            $('.project-suggest').append(`<li class="feature-news-items mb-2">
+                                        <a href="/post/project/${e.id}"
+                                           class="feature-news-items-link d-flex row"
+                                           role="link">
+                                            <div class="feature-news-items-img d-block hover-image col-5 pr-0">
+                                                <img src="${e.avatar}" alt="">
+                                            </div>
+                                            <div class="feature-news-items-info col-6 pl-0">
+                                                <div class="feature-news-items-info-title text-uppercase">
+                                                        ${e.title}
+                                                </div>
+                                                <div class="feature-news-items-info-date">
+                                                    <i class="fa-solid fa-calendar-alt mr-2"></i>
+                                                        ${e.updatedAt}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>`)
+        })
+
+    }
+})
 
 // let allFiles = [];
 // let form = document.getElementsByClassName("form-img");

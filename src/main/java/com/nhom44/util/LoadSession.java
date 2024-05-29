@@ -5,7 +5,7 @@ import com.nhom44.bean.Province;
 import com.nhom44.bean.Service;
 import com.nhom44.services.CategoryService;
 import com.nhom44.services.ProvinceService;
-import com.nhom44.services.ServiceOfProjectService;
+import com.nhom44.services.ServicesService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,11 +16,11 @@ public class LoadSession {
     public static void loadSession(HttpServletRequest req) {
         HttpSession session = req.getSession();
         if (session.getAttribute("services") == null) {
-            List<Service> services = ServiceOfProjectService.getInstance().getAllActive();
+            List<Service> services = ServicesService.getInstance().getAllActive();
             session.setAttribute("services", services);
         } else {
             List<Service> services = (List<Service>) session.getAttribute("services");
-            List<Service> services1 = ServiceOfProjectService.getInstance().getAllActive();
+            List<Service> services1 = ServicesService.getInstance().getAllActive();
             if (!new HashSet<>(services1).containsAll(services)) {
                 session.setAttribute("services", services1);
             }

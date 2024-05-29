@@ -1,6 +1,6 @@
 package com.nhom44.controller.auth;
 
-import com.nhom44.services.CartService;
+import com.nhom44.services.AdviseService;
 import com.nhom44.services.UserService;
 import com.nhom44.services.VerifyService;
 
@@ -21,9 +21,8 @@ public class VerifyController extends HttpServlet {
 //        if (token != null) {
         //valid data
         if (url.equals("/verify/cart")) {
-            int cartId = VerifyService.getInstance().getCartsIdByCode(token);
-//                System.out.println(cartId);
-            if (CartService.getInstance().updateSuccessVerifyCart(cartId)) {
+            int cartId = VerifyService.getInstance().getAdvisesIdByCode(token);
+            if (AdviseService.getInstance().updateSuccessVerifyAdvise(cartId)) {
                 resp.sendRedirect(req.getContextPath() + "/home");
                 return;
             }

@@ -22,7 +22,7 @@ public class StringUtil {
         image.setName(path.substring(path.lastIndexOf("/") + 1));
         return image;
     }
-    public static String hashPassword(String password) {
+    public static String hash(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(password.getBytes());

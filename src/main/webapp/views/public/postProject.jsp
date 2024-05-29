@@ -85,6 +85,7 @@
                     <div class="sticky-top" style="z-index: 1; top:80px">
 
                         <form class="card " action="post?action=cast" method="post">
+                            // 0.1.1 người dùng nhập các thông tin trong biểu
                             <div class="card-body pl-3 pr-3">
                                 <!--Header-->
                                 <!--Body-->
@@ -100,7 +101,6 @@
                                     <label for="address" class="labels">Địa chỉ</label>
                                     <select name="address" id="address" class="form-control form-input">
                                         <option value="" disabled selected>Chọn tỉnh thành</option>
-
                                     </select>
                                 </div>
                                 <div class="row d-flex justify-content-between m-0 p-0 ">
@@ -112,10 +112,14 @@
                                     </select>
                                     <!--                                </div>-->
                                     <div class="form-outline col-lg-6 col-md-6 col-sm-12  mt-2 p-0 m-0 ">
-                                        <input name="representProjectId" type="number" id="itProject"
-                                               placeholder="Mã dự án"
-                                               class="form-control form-input ml-md-2 p-1"
-                                               value="">
+<%--                                        <input name="representProjectId" type="number" id="itProject"--%>
+<%--                                               placeholder="Mã dự án"--%>
+<%--                                               class="form-control form-input ml-md-2 p-1"--%>
+<%--                                               value="">--%>
+                                        <select name="representProjectId" id="itProject" class="form-control form-input ml-md-2 p-1">
+                                            <option value="" disabled="" selected="">Mã dự án</option>
+
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row  d-flex justify-content-between m-0 p-0">
@@ -145,23 +149,23 @@
                                 </div>
 
                                 <!-- Message -->
-                                <form method="dialog" enctype="multipart/form-data" class="form-img">
-                                    <div class="input-group mt-2">
-                                        <div class="file-field d-flex align-items-center">
-                                            <p class="m-0">khu vực thi công: </p>
-                                            <div class="btn btn-primary btn-sm float-left">
-                                                <span>chọn ảnh</span>
-                                                <input name="image" type="file" id="file_input" multiple>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="upload-wrapper">
-                                        <div class="border d-flex img-container">
-                                        </div>
-                                    </div>
-                                </form>
+<%--                                <form method="dialog" enctype="multipart/form-data" class="form-img">--%>
+<%--                                    <div class="input-group mt-2">--%>
+<%--                                        <div class="file-field d-flex align-items-center">--%>
+<%--                                            <p class="m-0">khu vực thi công: </p>--%>
+<%--                                            <div class="btn btn-primary btn-sm float-left">--%>
+<%--                                                <span>chọn ảnh</span>--%>
+<%--                                                <input name="image" type="file" id="file_input" multiple>--%>
+<%--                                            </div>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                    <div class="upload-wrapper">--%>
+<%--                                        <div class="border d-flex img-container">--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                </form>--%>
                                 <div class="text-center mt-4">
-                                    <button class="btn btn-red" id="save" type="button">Đặt Ngay</button>
+                                    <button class="btn btn-red" id="save" type="button">Tư vấn</button>
                                 </div>
                             </div>
                         </form>
@@ -185,5 +189,56 @@
 <%@include file="/layout/public/script.jsp" %>
 <script src="<c:url value="/template/js/main.js"/>"></script>
 <script src="<c:url value="/template/js/post-project.js"/>"></script>
+<script>
+    // 0.1.2 Người dùng thực hiện nhấn và nút "Tư vấn"
+    $('#save').click(function () {
+        // 1.1.1 Tổng hợp các thông tin từ biểu
+        let form = new FormData;
+        form.append('email', $('#form-email').val())
+        form.append('address', $('#address').val())
+        form.append('representProjectId', $('#itProject').val())
+        form.append('category', $('#category').val())
+        form.append('width', $('#area-width').val())
+        form.append("representProjectId", $('#representProjectId').val())
+        form.append('width', $('#area-width').val())
+        form.append('height', $('#area-length').val())
+        form.append('services', $('#services').val())
+        console.log($('#services').val())
+
+        $.ajax({
+            url: '/api/advise',
+            type: 'post',
+            data: form,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                data = JSON.parse(data);
+                // 5.1.1 biểu diễn thông báo lưu thành công
+                Swal.fire({
+                    title: "Success",
+                    text: data.message,
+                    icon: "success",
+                });
+                console.log(data)
+            },
+            error: function (e) {
+                // console.log("false")
+                // console.log(e.responseText)
+                let err = JSON.parse(e.responseText);
+                console.log(err.name, err.message)
+                // 2.2.2 biểu diễn thông báo
+                // 5.2.1 biểu diễn thông báo lưu thất bại
+                Swal.fire({
+                    title: "Error",
+                    text: err.message,
+                    icon: "error",
+                });
+                // fetchErr(err.name, err.message)
+            }
+        })
+
+    })
+
+</script>
 </body>
 </html>

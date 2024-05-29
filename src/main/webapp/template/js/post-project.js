@@ -1,129 +1,114 @@
 $(document).ready(function () {
-    $('.mdb-select').materialSelect();
 
 
 });
 
-let allFiles = [];
-let form = document.getElementsByClassName("form-img");
-let input = document.getElementById("file_input");
-let container = document.getElementsByClassName("img-container");
-if (input.files.length != 0) {
-    container[0].parentElement.classList.add('d-block')
-    container[0].parentElement.classList.remove('d-none')
-} else {
-    container[0].parentElement.classList.add('d-none')
-    container[0].parentElement.classList.remove('d-block')
-}
-input.addEventListener('change', function () {
-    let files = this.files;
-    for (let i = 0; i < files.length; i++) {
-        allFiles.push(files[i])
-    }
-    showImage();
-})
-const showImage = () => {
-    if (input.files.length != 0) {
-        container[0].parentElement.classList.add('d-block')
-        container[0].parentElement.classList.remove('d-none')
-    } else {
-        container[0].parentElement.classList.add('d-none')
-        container[0].parentElement.classList.remove('d-block')
-    }
-    let images = ' ';
-    allFiles.forEach((e, i) => {
-        images += '<div class="image position-relative border-radius"><img src="' + URL.createObjectURL(e) + '" alt="" class="border"> ' +
-            '<div class="position-absolute " > <i class="fa-solid fa-xmark" onclick="delImage(' + i + ')" style=""></i></div></div>'
-    })
-    container[0].innerHTML = images
-}
-let dt = new DataTransfer();
-const delImage = index => {
-    let dt = new DataTransfer();
-    for (let i = 0; i < input.files.length; i++) {
-        if (index !== i)
-            dt.items.add(input.files[i]) // here you exclude the file. thus removing it.
-    }
-    input.files = dt.files
-    allFiles = Array.from(input.files)
-    showImage()
-}
+// let allFiles = [];
+// let form = document.getElementsByClassName("form-img");
+// let input = document.getElementById("file_input");
+// let container = document.getElementsByClassName("img-container");
+// if (input.files.length != 0) {
+//     container[0].parentElement.classList.add('d-block')
+//     container[0].parentElement.classList.remove('d-none')
+// } else {
+//     container[0].parentElement.classList.add('d-none')
+//     container[0].parentElement.classList.remove('d-block')
+// }
+// input.addEventListener('change', function () {
+//     let files = this.files;
+//     for (let i = 0; i < files.length; i++) {
+//         allFiles.push(files[i])
+//     }
+//     showImage();
+// })
+// const showImage = () => {
+//     if (input.files.length != 0) {
+//         container[0].parentElement.classList.add('d-block')
+//         container[0].parentElement.classList.remove('d-none')
+//     } else {
+//         container[0].parentElement.classList.add('d-none')
+//         container[0].parentElement.classList.remove('d-block')
+//     }
+//     let images = ' ';
+//     allFiles.forEach((e, i) => {
+//         images += '<div class="image position-relative border-radius"><img src="' + URL.createObjectURL(e) + '" alt="" class="border"> ' +
+//             '<div class="position-absolute " > <i class="fa-solid fa-xmark" onclick="delImage(' + i + ')" style=""></i></div></div>'
+//     })
+//     container[0].innerHTML = images
+// }
+// let dt = new DataTransfer();
+// const delImage = index => {
+//     let dt = new DataTransfer();
+//     for (let i = 0; i < input.files.length; i++) {
+//         if (index !== i)
+//             dt.items.add(input.files[i]) // here you exclude the file. thus removing it.
+//     }
+//     input.files = dt.files
+//     allFiles = Array.from(input.files)
+//     showImage()
+// }
 
 
-$('#save').click(function () {
-    let form = new FormData;
-    form.append('email', $('#form-email').val())
-    form.append('address', $('#address').val())
-    form.append('representProjectId', $('#itProject').val())
-    form.append('category', $('#category').val())
-    form.append('width', $('#area-width').val())
-    form.append("representProjectId", $('#representProjectId').val())
-    form.append('width', $('#area-width').val())
-    form.append('height', $('#area-length').val())
-    form.append('services', $('#services').val())
-    for (const x of $("#file_input").prop('files')) {
-        form.append('image', x)
-    }
-
-    $.ajax({
-        url: '/api/cart',
-        type: 'post',
-        data: form,
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            console.log("save")
-            alert(data[0].message)
-            console.log(data)
-        },
-        error: function (e) {
-            // console.log("false")
-            console.log(e.responseText)
-            let err = JSON.parse(e.responseText);
-            for (let key of err) {
-                console.log(key.name, key.message)
-                fetchErr(key.name, key.message)
-            }
-        }
-    })
-
-})
 $(document).ready(function () {
-    $('select.services').change(function () {
-        let value = $(this).val().toString();
-        console.log(value)
-        $.ajax({
-            url: '/session/cart',
-            type: 'get',
-            data: {
-                name: 'services',
-                value: value
-            },
-            success: function (data) {
-                console.log(data)
-            },
-            error: function (e) {
-                console.log(e)
-            }
-        })
-    })
-})
-$('.form-input').blur(function () {
-    let name = $(this).attr("name");
-    let value = $(this).val();
     $.ajax({
-        url: '/session/cart',
+        url: '/api/advise',
         type: 'get',
-        data: {
-            name: name,
-            value: value
-        },
         success: function (data) {
+            data = JSON.parse(data);
+            data.provinces.forEach((e, i) => {
+                $('#address').append('<option value="' + e.id + '">' + e.name + '</option>')
+            })
+            data.categories.forEach((e, i) => {
+                $('#category').append('<option value="' + e.id + '">' + e.name + '</option>')
+            })
+            data.services.forEach((e, i) => {
+                $('#services').append('<option value="' + e.id + '">' + e.name + '</option>')
+            })
+            data.projects.forEach((e, i) => {
+                $('#itProject').append('<option value="' + e + '">' + e + '</option>')
+            })
+            $('.mdb-select').materialSelect();
         },
         error: function (e) {
+            console.log(e)
         }
+
     })
+
+//     $('select.services').change(function () {
+//         let value = $(this).val().toString();
+//         console.log(value)
+//         $.ajax({
+//             url: '/session/cart',
+//             type: 'get',
+//             data: {
+//                 name: 'services',
+//                 value: value
+//             },
+//             success: function (data) {
+//                 console.log(data)
+//             },
+//             error: function (e) {
+//                 console.log(e)
+//             }
+//         })
+//     })
+// })
+// $('.form-input').blur(function () {
+//     let name = $(this).attr("name");
+//     let value = $(this).val();
+//     $.ajax({
+//         url: '/session/cart',
+//         type: 'get',
+//         data: {
+//             name: name,
+//             value: value
+//         },
+//         success: function (data) {
+//         },
+//         error: function (e) {
+//         }
+//     })
 
 });
 
@@ -131,7 +116,7 @@ $('.form-input').blur(function () {
 function like(project, id) {
     console.log(project)
     $.ajax({
-        url: "/api/save_project"+id,
+        url: "/api/save_project" + id,
         type: "GET",
         success: function (response) {
             console.log(response);
@@ -140,8 +125,6 @@ function like(project, id) {
                 project.classList.replace("fa-regular", "fa-solid")
             } else if (resp.name == 'delete')
                 project.classList.replace("fa-solid", "fa-regular")
-            //= "fa-solid fa-bookmark position-absolute";
-            // console.log(p);
         },
         error: function (response) {
             let resp = JSON.parse(response.responseText);

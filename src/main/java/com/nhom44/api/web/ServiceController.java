@@ -7,7 +7,7 @@ import com.nhom44.bean.Service;
 import com.nhom44.bean.User;
 import com.nhom44.services.PostService;
 import com.nhom44.services.ProjectService;
-import com.nhom44.services.ServiceOfProjectService;
+import com.nhom44.services.ServicesService;
 import com.nhom44.validator.NumberVallidator;
 
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +23,7 @@ public class ServiceController extends HttpServlet {
         ResponseModel responseModel = new ResponseModel();
         switch (url) {
             case "/api/services":
-                List<Service> services = ServiceOfProjectService.getInstance().getAllActive();
+                List<Service> services = ServicesService.getInstance().getAllActive();
                 responseModel.setStatus("200");
                 responseModel.setMessage("Success");
                 responseModel.setData(services);
@@ -40,7 +40,7 @@ public class ServiceController extends HttpServlet {
                     resp.sendRedirect("/404");
                     return;
                 }
-                Service service = ServiceOfProjectService.getInstance().getActiveById(Integer.parseInt(id));
+                Service service = ServicesService.getInstance().getActiveById(Integer.parseInt(id));
                 service.setName("DỊCH VỤ " + service.getName().toUpperCase());
                 service.setUpdatedAt(service.getUpdatedAt().substring(0, 10));
                 User user = (User) req.getSession().getAttribute("auth");
@@ -53,7 +53,7 @@ public class ServiceController extends HttpServlet {
                 if (path.contains("/")) {
                     switch (path.split("/")[1].trim()) {
                         case "suggest":
-                            List<Service> suggestServices = ServiceOfProjectService.getInstance().getSuggestServices();
+                            List<Service> suggestServices = ServicesService.getInstance().getSuggestServices();
                             responseModel.setMessage("get suggest services success");
                             responseModel.setData(suggestServices);
                             break;

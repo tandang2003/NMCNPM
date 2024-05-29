@@ -2,7 +2,6 @@ package com.nhom44.bean;
 
 import com.nhom44.util.StringUtil;
 
-import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -180,6 +179,6 @@ public class User implements Serializable {
     }
 
     public static void main(String[] args) {
-        System.out.println(StringUtil.hashPassword("123123"));
+        System.out.println(StringUtil.hash("123123"));
     }
 }

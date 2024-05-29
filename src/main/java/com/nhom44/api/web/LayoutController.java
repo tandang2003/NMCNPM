@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.nhom44.bean.Category;
 import com.nhom44.bean.Service;
 import com.nhom44.services.CategoryService;
-import com.nhom44.services.ServiceOfProjectService;
+import com.nhom44.services.ServicesService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +21,7 @@ public class LayoutController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Category> categories = CategoryService.getInstance().getAllActiveOrderByNumOfViews();
-        List<Service> services = ServiceOfProjectService.getInstance().getAllActive();
+        List<Service> services = ServicesService.getInstance().getAllActive();
         Map<String, List> map = new HashMap<>();
         map.put("categories", categories);
         map.put("services", services);

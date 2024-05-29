@@ -26,7 +26,7 @@ public class LoginController extends HttpServlet {
         User user = UserService.getInstance().login(email, password);
         System.out.println(user.toString());
         if (user != null && Objects.equals(user.getEmail(), email)
-                && Objects.equals(user.getPassword(), StringUtil.hashPassword(password))) {
+                && Objects.equals(user.getPassword(), StringUtil.hash(password))) {
             if (user.getStatus() == 2) {
                 resp.setStatus(403);
                 resp.getWriter().print(new Gson().toJson("Tài khoản của bạn đã bị khóa"));

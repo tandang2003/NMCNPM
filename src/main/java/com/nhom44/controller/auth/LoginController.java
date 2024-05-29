@@ -4,7 +4,6 @@ import com.nhom44.bean.User;
 import com.nhom44.services.MailService;
 import com.nhom44.services.UserService;
 import com.nhom44.services.VerifyService;
-import com.nhom44.util.LoadSession;
 import com.nhom44.util.StringUtil;
 import com.nhom44.validator.EmailSingleValidator;
 
@@ -38,10 +37,10 @@ public class LoginController extends HttpServlet {
             String email = new EmailSingleValidator().validator(req.getParameter("email")) ? req.getParameter("email") : "";
             String password = req.getParameter("password") != null && !req.getParameter("password").isEmpty() ? req.getParameter("password") : "";
             System.out.println(password);
-            System.out.println(StringUtil.hashPassword(password));
+            System.out.println(StringUtil.hash(password));
             User user = UserService.getInstance().login(email, password);
             System.out.println(user != null);
-            if (user != null && Objects.equals(user.getEmail(), email) && Objects.equals(user.getPassword(), StringUtil.hashPassword(password))) {
+            if (user != null && Objects.equals(user.getEmail(), email) && Objects.equals(user.getPassword(), StringUtil.hash(password))) {
                 if (user.getStatus() == 2) {
                     req.setAttribute("error", "Tài khoản của bạn đã bị khóa");
                     System.out.println("Tài khoản của bạn đã bị khóa");

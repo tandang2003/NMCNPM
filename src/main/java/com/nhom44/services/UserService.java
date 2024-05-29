@@ -40,7 +40,7 @@ public class UserService {
     public User additional(String email, String password, String name, Date birthday, String phone, String province, String isMale, String status, String role) {
         User user = new User();
         user.setEmail(email);
-        user.setPassword(StringUtil.hashPassword(password));
+        user.setPassword(StringUtil.hash(password));
         user.setFullName(name);
         user.setBirthday(new Date(birthday.getTime()));
         user.setPhone(phone);
@@ -72,7 +72,7 @@ public User update(User user){
     public int update(String oldEmail, String email, String password, String name, Date birthday, String phone, int province, String isMale, String status, String role) {
             User user = new User();
             user.setEmail(email);
-            user.setPassword(StringUtil.hashPassword(password));
+            user.setPassword(StringUtil.hash(password));
             user.setFullName(name);
             user.setBirthday(new Date(birthday.getTime()));
             user.setPhone(phone);
@@ -103,7 +103,7 @@ public User update(User user){
     public User login(String email, String password) {
         return conn.withExtension(UserDAO.class, dao -> {
             System.out.println(email);
-            String hash=StringUtil.hashPassword(password).trim();
+            String hash=StringUtil.hash(password).trim();
             System.out.println("hash "+hash);
             return dao.login(email, hash);
         });
@@ -117,12 +117,12 @@ public User update(User user){
         return conn.withExtension(UserDAO.class, dao -> dao.getUserByEmailForCustomer(email));
     }
     public static void main(String[] args) {
-        System.out.println(StringUtil.hashPassword("e79c5ca3-"));
+        System.out.println(StringUtil.hash("e79c5ca3-"));
         System.out.println(getInstance().login("tandanmin@gmail.com","5b240e80-"));
     }
 
     public void GoogleAdditional(User user) {
-        user.setPassword(StringUtil.hashPassword(user.getPassword()));
+        user.setPassword(StringUtil.hash(user.getPassword()));
         conn.withExtension(UserDAO.class, dao -> dao.insertGoogleUser(user));
     }
 }

@@ -1,6 +1,6 @@
 package com.nhom44.DAO;
 
-import com.nhom44.bean.Cart;
+import com.nhom44.bean.Advise;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -9,36 +9,36 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
 
-@RegisterBeanMapper(Cart.class)
-public interface CartDAO {
-    @SqlUpdate("INSERT INTO carts(email, categoryId, provinceId,width,height,representProjectId, createdAt, updatedAt) VALUES (:email,:categoryId, :provinceId,:width,:height,:representProjectId, :createdAt, :updatedAt)")
-    Integer add(@BindBean Cart cart);
+@RegisterBeanMapper(Advise.class)
+public interface AdviseDAO {
+    @SqlUpdate("INSERT INTO advises(email, categoryId, provinceId,width,height,representProjectId, createdAt, updatedAt) VALUES (:email,:categoryId, :provinceId,:width,:height,:representProjectId, :createdAt, :updatedAt)")
+    Integer add(@BindBean Advise cart);
 
-    @SqlQuery("SELECT * From carts WHERE email=:email AND categoryId=:categoryId AND provinceId=:provinceId AND width=:width AND height=:height AND representProjectId=:representProjectId")
-    Cart getByObject(@BindBean Cart cart);
+    @SqlQuery("SELECT * From advises WHERE email=:email AND categoryId=:categoryId AND provinceId=:provinceId AND width=:width AND height=:height AND representProjectId=:representProjectId")
+    Advise getByObject(@BindBean Advise cart);
 
-    @SqlUpdate("INSERT INTO carts_images(cartId, imageId) VALUES(:id, :imageId)")
+    @SqlUpdate("INSERT INTO advises_images(cartId, imageId) VALUES(:id, :imageId)")
     Integer addImage(@Bind("id") int id, @Bind("imageId") int imageId);
 
-    @SqlUpdate("UPDATE carts SET isCheck=1 WHERE id=:cartId")
-    Boolean updateSuccessVerifyCart(@Bind("cartId") int cartId);
+    @SqlUpdate("UPDATE advises SET isCheck=1 WHERE id=:cartId")
+    Boolean updateSuccessVerifyAdvise(@Bind("cartId") int cartId);
 
-    @SqlQuery("SELECT c.*, categories.name as category, provinces.name as province FROM carts c " +
+    @SqlQuery("SELECT c.*, categories.name as category, provinces.name as province FROM advises c " +
             "JOIN categories ON c.categoryId=categories.id " +
             "JOIN provinces ON c.provinceId=provinces.id " +
             "order by c.id desc"
                 )
-    List<Cart> getAll();
+    List<Advise> getAll();
 
-    @SqlQuery("SELECT * FROM carts WHERE id=:cartId")
-    Cart getById(@Bind("cartId") int cartId);
+    @SqlQuery("SELECT * FROM advises WHERE id=:cartId")
+    Advise getById(@Bind("cartId") int cartId);
 
-    @SqlUpdate("INSERT INTO carts_services(cartId, serviceId) VALUES(:check, :integer)")
+    @SqlUpdate("INSERT INTO advises_services(cartId, serviceId) VALUES(:check, :integer)")
     Integer addService(@Bind("check") int check, @Bind("integer") Integer integer);
 
-    @SqlQuery("SELECT serviceId FROM carts_services WHERE cartId=:id")
+    @SqlQuery("SELECT serviceId FROM advises_services WHERE cartId=:id")
     List<Integer> getServices(@Bind("id") int id);
 
-    @SqlQuery("SELECT  concat(i.path,'/',i.name)  FROM carts_images ci join images i on ci.imageId=i.id WHERE cartId=:id")
+    @SqlQuery("SELECT  concat(i.path,'/',i.name)  FROM advises_images ci join images i on ci.imageId=i.id WHERE cartId=:id")
     List<String> getImages(@Bind("id") int id);
 }

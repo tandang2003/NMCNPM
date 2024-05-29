@@ -11,8 +11,12 @@ import java.util.List;
 
 @RegisterBeanMapper(Category.class)
 public interface CategoryDAO {
-    @SqlQuery("SELECT c.id, c.name, IFNULL(count(p.id),0) AS numberOfProject, c.updatedAt, c.status FROM Categories c LEFT JOIN Projects p ON p.categoryId = c.Id GROUP BY c.id, c.name,c .updatedAt, c.status")
+    @SqlQuery("SELECT c.id, c.name, IFNULL(count(p.id),0) AS numberOfProject, c.updatedAt, c.status " +
+            "FROM Categories c LEFT JOIN Projects p ON p.categoryId = c.Id " +
+            "GROUP BY c.id, c.name,c .updatedAt, c.status")
     List<Category> getAll();
+    @SqlQuery("Select * FROM Categories WHERE status = 1")
+    List<Category> getAllActive();
 //    @SqlQuery("SELECT id, name FROM Categories WHERE status = 1")
 //    @SqlQuery("SELECT c.id, c.name, IFNULL(count(p.id),0) AS numberOfProject, c.updatedAt, c.status " +
 //            "FROM Categories c LEFT JOIN Projects p ON p.categoryId = c.Id " +

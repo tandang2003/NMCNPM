@@ -1,7 +1,7 @@
 
 package com.nhom44.services;
 
-import com.nhom44.bean.Cart;
+import com.nhom44.bean.Advise;
 import com.nhom44.mail.MailProperties;
 
 import javax.mail.*;
@@ -50,7 +50,6 @@ public class MailService {
             msg.setText(content);
             msg.setSentDate(new Date());
             Transport.send(msg);
-            System.out.println("Sent");
         } catch (Exception var9) {
             var9.printStackTrace();
         }
@@ -83,7 +82,7 @@ public class MailService {
         this.sendMail(to, subject, content);
     }
 
-    public void sendMailToNotiFyCart(String domain, String verifycode, Cart cart) {
+    public void sendMailToNotifyAdvise(String domain, String verifyCode, Advise cart) {
        if (domain.equals("localhost")) {
             domain += ":8080";
         }
@@ -92,9 +91,10 @@ public class MailService {
                 "\n\t\tTỉnh thành :" + cart.getProvinceId() + "\n\t\tChiều rộng khu vực xây dựng:" +
                 cart.getWidth() + "\n\t\tChiều dài khu vực xây dựng:" + cart.getHeight() + "\n\t\tDự án mẫu :" +
                 cart.getRepresentProjectId() + "\n\t\tNgày tạo :" + cart.getCreatedAt();
-        String verifyLink = "http://" + domain + "/verify/cart?code=" + verifycode;
+        String verifyLink = "http://" + domain + "/verify/cart?code=" + verifyCode;
         content += "\n\n" + "Nhấp vào đường link sau để xác thực yêu cầu: " + verifyLink;
         String subject = "Xác thực yêu cầu";
         this.sendMail(cart.getEmail(), subject, content);
     }
+
 }

@@ -49,7 +49,7 @@ public class ProjectController extends HttpServlet {
         }
 
     }
-//khánh
+//Xử lý chức năng tìm kiếm (3.6.2.4)
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String url = req.getRequestURI();
@@ -97,21 +97,27 @@ public class ProjectController extends HttpServlet {
             System.out.println("maxPrice " + maxPrice);
             System.out.println("minAcreage " + minArea);
             System.out.println("maxAcreage " + maxArea);
+            //3.6.3.4.5.1 lấy danh sách tìm kiếm dự án
             if (url.equals("/api/project/search")) {
                 User user = (User) req.getSession().getAttribute("auth");
                 int userid = user != null ? user.getId() : 0;
+              //3.6.3.4.5.2 getProjetAllActive()
                 List<Project> projects = ProjectService.getInstance().getProjetAllActive(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minArea, maxArea, userid);
 //                for (Project project : projects) {
 //                    System.out.println(project.toString());
 //                }
 //                System.out.println(new Gson().toJson(projects));
-                resp.setStatus(200);
+                resp.setStatus(200);     //thành công
+                //3.6.3.4.5.6 Gửi danh sách dự án dạng JSON
                 resp.getWriter().print(new Gson().toJson(projects));
+                //3.6.3.4.3.1 lấy kích thước danh sách tìm kiếm dự án
             } else if (url.equals("/api/project/search/length")) {
+            	//3.6.3.4.3.2 getProjetAllActiveSize()
                 int size = ProjectService.getInstance().getProjetAllActiveSize(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minArea, maxArea);
                 System.out.println("size=" + size);
                 System.out.println(size / 16);
-                resp.setStatus(200);
+                resp.setStatus(200);      //thành công
+                //3.6.3.4.3.6 Gửi số lượng dự án dạng JSON 
                 resp.getWriter().print(new Gson().toJson(size));
             }
             System.out.println(categoryId + " " + provinceId + " " + price + " " + area + " " + serviceId);
@@ -121,5 +127,5 @@ public class ProjectController extends HttpServlet {
             return;
         }
     }
-    //Khánh
+  
 }

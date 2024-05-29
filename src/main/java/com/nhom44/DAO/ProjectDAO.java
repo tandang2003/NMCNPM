@@ -101,6 +101,8 @@ public interface ProjectDAO {
             "GROUP BY p.id, p.title, p.description, p.avatar, c.name , if(:userid<>0, userId, sl.postId) " +
             "order by p.id " +
             "LIMIT 16 OFFSET :offset")
+    
+    //Truy vấn lấy danh sách thông tin dự án 
     List<Project> getProjetAllActive(@Bind("offset") int offset, @Bind("categoryId") int categoryId,
                                      @Bind("serviceId") int serviceId,
                                      @Bind("provinceId") int provinceId,
@@ -160,7 +162,7 @@ public interface ProjectDAO {
             "JOIN Services s ON s.id=ps.serviceId AND s.status=1 )")
     
     List<Project> getSuggestProjects(@Bind("categoryId") int categoryId);
-   //Khánh 
+   //Truy vấn lấy size danh sách dự án cho chức năng tìm kiếm 
     @SqlQuery("SELECT count(p.id) " +
             "FROM Projects p " +
             "JOIN Categories c ON c.id = p.categoryId AND c.status = 1 " +
@@ -182,7 +184,7 @@ public interface ProjectDAO {
     Integer getProjetAllActiveSize(@Bind("offset") int offset, @Bind("categoryId") int categoryId, @Bind("serviceId") int serviceId, @Bind("provinceId") int provinceId, @Bind("minPrice") long minPrice, @Bind("maxPrice") long maxPrice, @Bind("minAcreage") int minAcreage, @Bind("maxAcreage") int maxAcreage);
 
     
-//
+
 
     @SqlQuery("SELECT DISTINCT p.id, p.title, p.avatar,p.description,p.updatedAt, sl.userId as saveBy " +
             "FROM Projects p  " +

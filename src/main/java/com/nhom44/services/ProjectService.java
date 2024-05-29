@@ -123,9 +123,11 @@ public class ProjectService {
         return conn.withExtension(ProjectDAO.class, dao -> dao.getExcuting());
     }
 
-//Khánh
+//Chức năng tìm kiếm
+  //(3.6.2.4).5.3 Truy vấn dữ liệu dự án
     public List<Project> getProjetAllActive(int offset, int categoryId, int serviceId, int provinceId, long minPrice, long maxPrice, int minAcreage, int maxAcreage, int userid) {
-        return conn.withExtension(ProjectDAO.class, dao -> {
+        //(3.6.2.4).5.4 Trả về danh sách dự án
+    	return conn.withExtension(ProjectDAO.class, dao -> {
             System.out.println("userid " + userid);
             List<Project> res = dao.getProjetAllActive(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minAcreage, maxAcreage, userid);
             for (Project project : res) {
@@ -145,10 +147,10 @@ public class ProjectService {
     }
 
 
-    
-    //Khánh
+    //(3.6.2.4).3.3 Truy vấn số lượng dự án
     public int getProjetAllActiveSize(int offset, int categoryId, int serviceId, int provinceId, long minPrice, long maxPrice, int minArea, int maxArea) {
         int num = conn.withExtension(ProjectDAO.class, dao -> dao.getProjetAllActiveSize(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minArea, maxArea));
+      //(3.6.2.4).3.4 Trả về danh sách dự án
         return num % 16 == 0 ? num / 16 : num / 16 + 1;
     }
 

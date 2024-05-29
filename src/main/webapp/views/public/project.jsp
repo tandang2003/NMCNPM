@@ -282,6 +282,7 @@ function getSize(data) {
         }
     }
     console.log($.param(fdata))
+    //3.6.3.4.3.1
     $.ajax({
         url: "/api/project/search/length",
         type: "POST",
@@ -289,6 +290,7 @@ function getSize(data) {
         success: function (response) {
             let data = response;
             console.log(data)
+            ////3.6.2.4.4 Gọi drawButton()
             drawButton($.param(fdata), response);
             window.history.replaceState(null, null, "/project?" + $.param(fdata));
             return false;
@@ -317,6 +319,7 @@ function getProject(data, i) {
             console.log(response);
             let data = JSON.parse(response);
             console.log(data)
+            //3.6.2.4.6 Gọi drawProject
             drawProject(data);
             return false;
         },
@@ -328,6 +331,7 @@ function getProject(data, i) {
 }
 </script>
 <script>
+	
     function drawButton( size) {
         console.log(size)
 
@@ -355,10 +359,11 @@ function getProject(data, i) {
         console.log(page)
         container.innerHTML = page;
         effectButton();
+      //3.6.2.4.4.1 Cập nhật các nút trang
         console.log('button:' + container.innerHTML)
     }
 
-
+		
     function drawProject(data) {
         let container = document.getElementById('project-container');
         container.innerHTML = "";
@@ -388,6 +393,7 @@ function getProject(data, i) {
                 + '</div>'
                 + '</div></div></a></div></div>'
         }
+      //3.6.2.4.6.1 Cập nhật container dự án
         container.innerHTML = project;
     }
 </script>

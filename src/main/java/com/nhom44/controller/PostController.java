@@ -32,7 +32,7 @@ public class PostController extends HttpServlet {
                 req.setAttribute("page", "post-project");
                 Project project = ProjectService.getInstance().getActiveById(Integer.parseInt(FindingID));
                 project.setUpdatedAt(project.getUpdatedAt().substring(0, 10));
-                List<Service> servicesOfProject = ServiceOfProjectService.getInstance().getServicesByProjectId(project.getId());
+                List<Service> servicesOfProject = ServicesService.getInstance().getServicesByProjectId(project.getId());
                 List<String> gallery = ImageService.getInstance().getGroupImagesByProjectId(Integer.parseInt(FindingID));
                 Post post = PostService.getInstance().getById(project.getPostId());
                 List<Project> suggestProjects = ProjectService.getInstance().getSuggestProjects(project.getCategoryId());
@@ -56,10 +56,10 @@ public class PostController extends HttpServlet {
         if (url.equals("/post/service")) {
             try {
                 req.setAttribute("page", "post-service");
-                Service service = ServiceOfProjectService.getInstance().getActiveById(Integer.parseInt(FindingID));
+                Service service = ServicesService.getInstance().getActiveById(Integer.parseInt(FindingID));
                 service.setUpdatedAt(service.getUpdatedAt().substring(0, 10));
                 Post post = PostService.getInstance().getById(service.getPostId());
-                List<Service> suggestServices = ServiceOfProjectService.getInstance().getSuggestServices();
+                List<Service> suggestServices = ServicesService.getInstance().getSuggestServices();
                 User user = (User) req.getSession().getAttribute("auth");
                 if (user != null) {
                     ProjectService.getInstance().addHistory(user.getId(), post.getId());

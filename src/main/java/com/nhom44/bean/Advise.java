@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class Cart implements Serializable {
+public class Advise implements Serializable {
     private int id;
     private String email;
     private int categoryId;
@@ -22,7 +22,7 @@ public class Cart implements Serializable {
 
     @Override
     public String toString() {
-        return "Cart{" +
+        return "Advise{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", categoryId=" + categoryId +
@@ -44,7 +44,7 @@ public class Cart implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Cart cart = (Cart) o;
+        Advise cart = (Advise) o;
         return id == cart.id && categoryId == cart.categoryId && provinceId == cart.provinceId && representProjectId == cart.representProjectId && Double.compare(width, cart.width) == 0 && Double.compare(height, cart.height) == 0 && isCheck == cart.isCheck && Objects.equals(email, cart.email) && Objects.equals(createdAt, cart.createdAt) && Objects.equals(updatedAt, cart.updatedAt) && Objects.equals(province, cart.province) && Objects.equals(category, cart.category) && Objects.equals(services, cart.services) && Objects.equals(images, cart.images);
     }
 
@@ -165,10 +165,10 @@ public class Cart implements Serializable {
         this.images = images;
     }
 
-    public Cart() {
+    public Advise() {
     }
 
-    public Cart(int id, String email, int categoryId, int provinceId, int representProjectId, double width, double height, String createdAt, String updatedAt, int isCheck, String province, String category, List<Integer> services, List<String> images) {
+    public Advise(int id, String email, int categoryId, int provinceId, int representProjectId, double width, double height, String createdAt, String updatedAt, int isCheck, String province, String category, List<Integer> services, List<String> images) {
         this.id = id;
         this.email = email;
         this.categoryId = categoryId;

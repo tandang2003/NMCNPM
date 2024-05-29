@@ -8,14 +8,14 @@ import org.jdbi.v3.core.Jdbi;
 
 import java.util.*;
 
-public class ServiceOfProjectService {
+public class ServicesService {
     private static Jdbi conn;
-    private static ServiceOfProjectService instance;
-    private ServiceOfProjectService() {
+    private static ServicesService instance;
+    private ServicesService() {
         conn = JDBIConnector.get();
     }
-    public static ServiceOfProjectService getInstance() {
-        return instance != null ? instance : (instance = new ServiceOfProjectService());
+    public static ServicesService getInstance() {
+        return instance != null ? instance : (instance = new ServicesService());
     }
 
     public List<Service> getAll() {

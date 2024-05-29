@@ -49,7 +49,7 @@ public class AdviseController extends HttpServlet {
         resp.getWriter().flush();
         resp.getWriter().close();
     }
-//1.gửi thông tin biểu mẩu về server(doPost(req, resp))
+//1. gửi các thông tin mà người dùng đã nhập lên server(doPost(req, resp))
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -59,7 +59,7 @@ public class AdviseController extends HttpServlet {
         responseModel = new ResponseModel();
 //        2.kiểm tra dữ liệu trông biểu mẫu người dùng có hợp lệ không(checkValidation())
         if (!checkValidation()) {
-//            2.2.1 gửi thông báo cho người dùng biết về trường thông tin không hợp lệ
+//           2.2.1 gửi thông báo cho người dùng biết về trường thông tin không hợp lệ
             JsonObject jsonObject = new JsonObject();
             jsonObject.add("name", new Gson().toJsonTree(responseModel.getName()));
             jsonObject.add("message", new Gson().toJsonTree(responseModel.getMessage()));
@@ -69,23 +69,23 @@ public class AdviseController extends HttpServlet {
             resp.getWriter().close();
             return;
         }
-//       2.1.1 lưu yêu cầu của người dùng vào CSDL(add(advise))
+//      2.1.1 lưu yêu cầu tư vấn của người dùng vào CSDL(add(advise))
 //      trả về trạng thái thành công hay thất bại của việc lưu yêu cầu
         boolean status = AdviseService.getInstance().add(advise);
         JsonObject jsonObject = new JsonObject();
-//        3. thực hiện kiểm tra trạng thành công hay thất bại của việc lưu yêu cầu tư vấn vào cơ sở dữ liệu
+//        4. thực hiện kiểm tra trạng thái thành công hay thất bại của việc lưu yêu cầu tư vấn vào cơ sở dữ liệu
         if (status) {
-//            3.1.1 cập nhập thông tin phải hồi luu yêu cầu thành công
+//         4.1.1  thực hiện tạo thông báo lưu thành công
             jsonObject.add("message", new Gson().toJsonTree("Yêu cầu của bạn đã gửi thành công. chúng tôi sẽ cố gắn liên hệ với bạn sớm nhất có thể"));
             jsonObject.add("name", new Gson().toJsonTree("success"));
             resp.setStatus(200);
         }else{
-//            3.1.2 cập nhập thông tin phải hồi luu yêu cầu thất bại
+//           4.2.1  thực hiện tạo thông báo lưu  thất bại
             jsonObject.add("name", new Gson().toJsonTree("Lỗi hệ thống"));
             jsonObject.add("message", new Gson().toJsonTree("Hệ thống đang gặp trục trặc vui lòng thực hiện lại sau ít phút"));
             resp.setStatus(400);
         }
-//        4.1.1 gửi phản hồi thông báo cho người dùng
+//       5. gửi thông báo về cho người dùng
         resp.getWriter().println(jsonObject.toString());
         resp.getWriter().flush();
         resp.getWriter().close();

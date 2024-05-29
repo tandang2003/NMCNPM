@@ -32,6 +32,8 @@ public class HomeController extends HttpServlet {
         responseModel = new ResponseModel();
 //      2. tìm quy trình sử lý phù hợp với đường dẫn gốc(selectSuitableHandleForThePath(url)
         selectSuitableHandleForThePath(url);
+
+        //                9.1.1 trả về danh sách dự án
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", responseModel.getName());
         jsonObject.add("data", new Gson().toJsonTree(responseModel.getData()));
@@ -67,7 +69,6 @@ public class HomeController extends HttpServlet {
 //                trả về danh sách dự án
                 List<Project> projects = ProjectService.getInstance().get8ActiveProjectHighestView(Integer.parseInt(data), userId);
 //              8  Hệ thống thực hiện cập nhập thông tin phản hồi( updateResponseModel(status, name, data))
-//                9.1.1 trả về danh sách dự án
                 updateResponseModel(200, "success", projects);
                 break;
             case "/api/home/slides":
@@ -80,7 +81,7 @@ public class HomeController extends HttpServlet {
                 updateResponseModel(200, "success", categories);
                 break;
             default:
-//                3.2.1 Cập phản thông tin phản hồi( updateResponseModel(status, name, data))
+//                3.2.1 Hệ thống thực hiện cập nhập thông báo lỗi( updateResponseModel(status, name, data))
 //                4 trả về thông báo lỗi
                 updateResponseModel(400, "error", "url not found");
                 break;

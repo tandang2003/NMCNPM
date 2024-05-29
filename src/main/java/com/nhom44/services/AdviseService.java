@@ -29,16 +29,14 @@ public class AdviseService implements Serializable {
 //        2.1.2 lưu yêu cầu của người dùng vào CSDL(add(advise))
         //trả về số dòng thay đổi trên CSDL
         int check = conn.withExtension(AdviseDAO.class, dao -> dao.add(finalAdvise));
-//       2.1.3 Lấy từ ra yêu cầu của người dùng từ cơ sở dữ liệu(getByObject(advise))
-//        trả về thông tin yêu cầu của người dùng
-       advise= conn.withExtension(AdviseDAO.class, dao -> dao.getByObject(finalAdvise));
-
+//      lấy ra id của yêu cầu
+        advise.setId(conn.withExtension(AdviseDAO.class, dao -> dao.getIdByObject(finalAdvise)));
+//        3. lưu các dịch vụ được người dùng chọn trong biểu mẫu vào CSDL(addService(adviseId, serviceId))
         for (int serviceId : advise.getServices()) {
-//            2.1.4 thêm loại dịch vụ đã được chọn của yêu cầu(addService(adviseId, serviceId))
             addService(advise.getId(), serviceId);
         }
 //        trả về trạng thái thành công hay thất bại của việc lưu yêu cầu
-        return check==1;
+        return check == 1;
     }
 
 

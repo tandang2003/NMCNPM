@@ -14,6 +14,8 @@ public interface AdviseDAO {
     @SqlUpdate("INSERT INTO advises(email, categoryId, provinceId,width,height,representProjectId, createdAt, updatedAt) VALUES (:email,:categoryId, :provinceId,:width,:height,:representProjectId, :createdAt, :updatedAt)")
     Integer add(@BindBean Advise cart);
 
+    @SqlQuery("SELECT id From advises WHERE email=:email AND categoryId=:categoryId AND provinceId=:provinceId AND width=:width AND height=:height AND representProjectId=:representProjectId")
+    Integer getIdByObject(@BindBean Advise cart);
     @SqlQuery("SELECT * From advises WHERE email=:email AND categoryId=:categoryId AND provinceId=:provinceId AND width=:width AND height=:height AND representProjectId=:representProjectId")
     Advise getByObject(@BindBean Advise cart);
 

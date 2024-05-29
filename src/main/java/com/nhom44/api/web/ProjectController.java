@@ -49,34 +49,77 @@ public class ProjectController extends HttpServlet {
         }
 
     }
-
+//khánh
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String url = req.getServletPath();
-        System.out.println(url);
+        String url = req.getRequestURI();
         System.out.println(req.getParameterMap().keySet().toString());
         List<PriceObjectHelper> prices = SearcherProjectUtil.PRICE_SEARCHING;
         req.setAttribute("prices", prices);
         if (url.equals("/api/project")) {
 //            List<Project> projects = ProjectService.getInstance().getProjetAllActive();
         } else if (url.equals("/api/project/search") || url.equals("/api/project/search/length")) {
-            User user = (User) req.getSession().getAttribute("auth")==null?new User():(User) req.getSession().getAttribute("auth");
+            SingleValidator validator = new NumberVallidator();
+            HttpSession session = req.getSession();
+            int categoryId = validator.validator(req.getParameter("categoryId")) ? Integer.parseInt(req.getParameter("categoryId")) : 0;
+            int provinceId = validator.validator(req.getParameter("provinceId")) ? Integer.parseInt(req.getParameter("provinceId")) : 0;
+            int price = validator.validator(req.getParameter("price")) ? Integer.parseInt(req.getParameter("price")) : 0;
+            int area = validator.validator(req.getParameter("area")) ? Integer.parseInt(req.getParameter("area")) : 0;
+            int serviceId = validator.validator(req.getParameter("serviceId")) ? Integer.parseInt(req.getParameter("serviceId")) : 0;
+            int offset = validator.validator(req.getParameter("offset")) ? Integer.parseInt(req.getParameter("offset")) * 16 : 0;
+            System.out.println("serviceId " + serviceId);
+            System.out.println("categoryId " + categoryId);
+            System.out.println("provinceId " + provinceId);
+            System.out.println("area " + area);
+            System.out.println("ser " + serviceId);
+            long minPrice = 0;
+            long maxPrice = 0;
+            if (price == SearcherProjectUtil.PRICE_SEARCHING.size()) {
+                maxPrice = SearcherProjectUtil.PRICE_SEARCHING.get(price - 1).getAmount();
+                minPrice = 0;
+            } else if (price > 0) {
+                maxPrice = 0;
+                minPrice = SearcherProjectUtil.PRICE_SEARCHING.get(price - 1).getAmount();
+            }
+            int minArea = 0;
+            int maxArea = 0;
+            if (area == SearcherProjectUtil.ACREAGE.size()) {
+                maxArea = SearcherProjectUtil.ACREAGE.get(area - 1);
+                minArea = 0;
+            } else if (area > 0) {
+                maxArea = 0;
+                minArea = SearcherProjectUtil.ACREAGE.get(area - 1);
+            }
+            System.out.println("serviceId " + serviceId);
+            System.out.println("categoryId " + categoryId);
+            System.out.println("provinceId " + provinceId);
+            System.out.println("minPrice " + minPrice);
+            System.out.println("maxPrice " + maxPrice);
+            System.out.println("minAcreage " + minArea);
+            System.out.println("maxAcreage " + maxArea);
             if (url.equals("/api/project/search")) {
-
+                User user = (User) req.getSession().getAttribute("auth");
                 int userid = user != null ? user.getId() : 0;
-                List<Project> projects = ProjectService.getInstance().getAllProjectActive(user.getId());
-                System.out.println(new Gson().toJson(projects));
+                List<Project> projects = ProjectService.getInstance().getProjetAllActive(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minArea, maxArea, userid);
+//                for (Project project : projects) {
+//                    System.out.println(project.toString());
+//                }
+//                System.out.println(new Gson().toJson(projects));
                 resp.setStatus(200);
                 resp.getWriter().print(new Gson().toJson(projects));
             } else if (url.equals("/api/project/search/length")) {
-                int num= ProjectService.getInstance().getAllProjectActive(user.getId()).size();
-                int size =num % 16 == 0 ? num / 16 : num / 16 + 1;
+                int size = ProjectService.getInstance().getProjetAllActiveSize(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minArea, maxArea);
+                System.out.println("size=" + size);
+                System.out.println(size / 16);
                 resp.setStatus(200);
                 resp.getWriter().print(new Gson().toJson(size));
             }
+            System.out.println(categoryId + " " + provinceId + " " + price + " " + area + " " + serviceId);
             resp.getWriter().flush();
             resp.getWriter().close();
+            System.out.println(url);
             return;
         }
     }
+    //Khánh
 }

@@ -54,6 +54,8 @@ public class ProjectService {
         Project finalProject1 = project;
         return conn.withExtension(ProjectDAO.class, dao -> dao.addExcuting(finalProject1.getId(), finalProject1.getSchedule(), finalProject1.getEstimated_complete()));
     }
+    
+    
 
     public boolean isFinishProject(int id) {
         return conn.withExtension(ProjectDAO.class, dao -> dao.isFinishProject(id));
@@ -121,18 +123,33 @@ public class ProjectService {
         return conn.withExtension(ProjectDAO.class, dao -> dao.getExcuting());
     }
 
+//Khánh
+    public List<Project> getProjetAllActive(int offset, int categoryId, int serviceId, int provinceId, long minPrice, long maxPrice, int minAcreage, int maxAcreage, int userid) {
+        return conn.withExtension(ProjectDAO.class, dao -> {
+            System.out.println("userid " + userid);
+            List<Project> res = dao.getProjetAllActive(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minAcreage, maxAcreage, userid);
+            for (Project project : res) {
+                System.out.println(project.toString());
+            }
+            for (Project p : res) {
+                if (p.getSaveBy() == userid && p.getSaveBy() != 0) p.setSave(true);
+            }
+//            res.forEach(p -> {
+//                if (p.getSaveBy() == userid) p.setSave(true);
+//            });
+            for (Project project : res) {
+                System.out.println(project.toString());
+            }
+            return res;
+        });
+    }
 
 
-
-
-    public List<Project> get8ActiveProjectHighestView(int id, int userid) {
-        //get Conection
-        //get 8 project highest view
-        List<Project> top8 = conn.withExtension(ProjectDAO.class, dao -> dao.get8ActiveProjectHighestView(id, userid));
-        for (Project p : top8) {
-            if (p.getSaveBy() == userid && p.getSaveBy() != 0) p.setSave(true);
-        }
-        return top8;
+    
+    //Khánh
+    public int getProjetAllActiveSize(int offset, int categoryId, int serviceId, int provinceId, long minPrice, long maxPrice, int minArea, int maxArea) {
+        int num = conn.withExtension(ProjectDAO.class, dao -> dao.getProjetAllActiveSize(offset, categoryId, serviceId, provinceId, minPrice, maxPrice, minArea, maxArea));
+        return num % 16 == 0 ? num / 16 : num / 16 + 1;
     }
 
 

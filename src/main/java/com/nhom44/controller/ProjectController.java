@@ -16,5 +16,7 @@ public class ProjectController extends HttpServlet {
     protected void doGet(javax.servlet.http.HttpServletRequest req, javax.servlet.http.HttpServletResponse resp) throws javax.servlet.ServletException, java.io.IOException {
         req.setAttribute("page", "project");
         req.getRequestDispatcher("/views/public/project.jsp").forward(req, resp);
+        
+        
     }
 }

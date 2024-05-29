@@ -218,69 +218,114 @@
 
 </script>
 <script>
-    function searching() {
-    //     console.log("searching");
-    //     let data = {
-    //         "categoryId": $('#categoryId').val(),
-    //         "provinceId": $('#provinceId').val(),
-    //         "serviceId": $('#serviceId').val(),
-    //         "price": $('#price').val(),
-    //         "area": $('#area').val(),
-    //     }
-    //     if (data.categoryId === "") {
-    //         delete data.categoryId;
-    //     }
-    //     if (data.provinceId === "") {
-    //         delete data.provinceId;
-    //     }
-    //
-    //     if (data.serviceId === "") {
-    //         delete data.serviceId;
-    //     }
-    //     if (data.price === "") {
-    //         delete data.price;
-    //     }
-    //     if (data.area === "") {
-    //         delete data.area;
-    //     }
-        getSize();
-        getProject(0);
+
+//3.6.2.4.1 Hệ thống gọi hàm searching().
+function searching() {
+    let data = {
+        "categoryId": $('#categoryId').val(),
+        "provinceId": $('#provinceId').val(),
+        "serviceId": $('#serviceId').val(),
+        "price": $('#price').val(),
+        "area": $('#area').val(),
+    }
+    
+    //3.6.2.4.2 Xử lý dữ liệu và xóa các trường rỗng
+    if (data.categoryId === "") {
+        delete data.categoryId;
+    }
+    if (data.provinceId === "") {
+        delete data.provinceId;
     }
 
-    function getSize() {
-        $.ajax({
-            url: "/api/project/search/length",
-            type: "POST",
-            success: function (response) {
-                let data = response;
-                drawButton( response);
-                // window.history.replaceState(null, null, "/project?" );
-                return false;
-            },
-            error: function (response) {
-                console.log(response);
-            }
-        })
+    if (data.serviceId === "") {
+        delete data.serviceId;
     }
+    if (data.price === "") {
+        delete data.price;
+    }
+    if (data.area === "") {
+        delete data.area;
+    }
+    
+    //3.6.2.4.3.Gọi getSize()
+    getSize(data);
+    //3.6.2.4.4.Gọi getProject()
+    getProject($.param(data), 0);
+}
 
-    function getProject( i) {
-        $.ajax({
-            url: "api/project/search",
-            type: "POST",
-            // dataType: "json",
-            data: {offset: i},
-            success: function (response) {
-                console.log(response);
-                let data = JSON.parse(response);
-                console.log(data)
-                drawProject(data);
-                return false;
-            },
-            error: function (response) {
-                console.log(response);
-            }
-        })
+//3.6.2.4.3.Gọi getSize()
+function getSize(data) {
+    let fdata = data;
+    if (fdata == null) {
+        fdata = {
+            "categoryId": $('#categoryId').val(),
+            "provinceId": $('#provinceId').val(),
+            "serviceId": $('#serviceId').val(),
+            "price": $('#price').val(),
+            "area": $('#area').val(),
+        }
+        if (fdata.categoryId === "") {
+            delete fdata.categoryId;
+        }
+        if (fdata.provinceId === "") {
+            delete fdata.provinceId;
+        }
+
+        if (fdata.serviceId === "") {
+            delete fdata.serviceId;
+        }
+        if (fdata.price === "") {
+            delete fdata.price;
+        }
+        if (fdata.area === "") {
+            delete fdata.area;
+        }
     }
+    console.log($.param(fdata))
+    $.ajax({
+        url: "/api/project/search/length",
+        type: "POST",
+        data: fdata,
+        success: function (response) {
+            let data = response;
+            console.log(data)
+            drawButton($.param(fdata), response);
+            window.history.replaceState(null, null, "/project?" + $.param(fdata));
+            return false;
+        },
+        //không lỗi được
+        error: function (response) {
+            console.log('error');
+            console.log(response);
+        }
+    })
+}
+//3.6.2.4.4.Gọi getProject()
+function getProject(data, i) {
+    console.log('get project');
+    if (data == null) {
+        data = 'offset=' + i;
+    } else data += "&offset=" + i;
+    console.log(data)
+    $.ajax({
+        url: "/api/project/search",
+        type: "POST",
+        // dataType: "json",
+        data: data,
+        success: function (response) {
+            console.log('project');
+            console.log(response);
+            let data = JSON.parse(response);
+            console.log(data)
+            drawProject(data);
+            return false;
+        },
+        error: function (response) {
+            console.log('error');
+            console.log(response);
+        }
+    })
+}
 </script>
 <script>
     function drawButton( size) {

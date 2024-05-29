@@ -5,6 +5,9 @@ import com.nhom44.DAO.VerifyDAO;
 import com.nhom44.db.JDBIConnector;
 import org.jdbi.v3.core.Jdbi;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class VerifyService {
     private Jdbi conn = JDBIConnector.get();
     private static VerifyService instance;
@@ -32,14 +35,16 @@ public class VerifyService {
         });
     }
 
-    public void insertVerifyCart(String cartCode, int cartId) {
+    public void insertVerifyAdvise(String verifyCode, int adviseId) {
+//        3.1.3 insertVerifyAdvises(verifyCode, adviseId)
+//        return numChangeRow
         this.conn.withExtension(VerifyDAO.class, (dao) -> {
-            return dao.insertVerifyCart(cartCode, cartId);
+            return dao.insertVerifyAdvises(verifyCode, adviseId);
         });
     }
-    public int getCartsIdByCode(String code) {
+    public int getAdvisesIdByCode(String code) {
         return (Integer)this.conn.withExtension(VerifyDAO.class, (dao) -> {
-            return dao.getCartsIdByCode(code);
+            return dao.getAdvisesIdByCode(code);
         });
     }
 }

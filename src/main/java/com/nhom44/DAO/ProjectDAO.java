@@ -225,4 +225,6 @@ public interface ProjectDAO {
 
     @SqlQuery("SELECT EXISTS(SELECT * FROM saved_projects WHERE userId=:userid AND postId=:postid)")
     Boolean isLikeByUser(@Bind("userid") int userid, @Bind("postid") int postid);
+    @SqlQuery("Select id From projects WHERE status=1")
+    List<Integer> getAllActiveId();
 }

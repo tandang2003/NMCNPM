@@ -5,7 +5,7 @@ import com.nhom44.bean.Province;
 import com.nhom44.bean.Service;
 import com.nhom44.services.CategoryService;
 import com.nhom44.services.ProvinceService;
-import com.nhom44.services.ServiceOfProjectService;
+import com.nhom44.services.ServicesService;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +33,7 @@ public class LoadNeed implements Filter {
         this.filterChain = chain;
         List<Province> allProvinces = ProvinceService.getInstance().getAll();
         this.request.setAttribute("allProvinces", allProvinces);
-        List<Service> allServices = ServiceOfProjectService.getInstance().getAllActive();
+        List<Service> allServices = ServicesService.getInstance().getAllActive();
         this.request.setAttribute("allServices", allServices);
         List<Category> allCategories = CategoryService.getInstance().getAllActiveOrderByNumOfViews();
         this.request.setAttribute("allCategories", allCategories);

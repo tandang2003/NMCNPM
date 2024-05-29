@@ -18,12 +18,14 @@ public class CategoryService {
     }
     public List<Category> getAll() {
         return conn.withExtension(CategoryDAO.class, dao -> dao.getAll());
-
+    }
+    public List<Category> getAllActive() {
+        return conn.withExtension(CategoryDAO.class, dao -> dao.getAllActive());
     }
 
     public static void main(String[] args) {
         CategoryService categoryService = CategoryService.getInstance();
-        List<Category> categories = categoryService.getAll();
+        List<Category> categories = categoryService.getAllActive();
         System.out.println(categories);
     }
 

@@ -2,6 +2,7 @@
 <script src=" <c:url value="/template/lib/MDB_4_pro/js/jquery.min.js"/>"></script>
 <script src=" <c:url value="/template/lib/MDB_4_pro/js/bootstrap.min.js"/>"></script>
 <script src=" <c:url value="/template/lib/MDB_4_pro/js/mdb.min.js"/>"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $.ajax({
         url: '/api/layout',

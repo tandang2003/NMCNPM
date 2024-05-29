@@ -25,7 +25,7 @@ public class ProjectController extends HttpServlet {
         String url = req.getServletPath();
         ResponseModel responseModel = new ResponseModel();
         if (url.equals("/api/project")) {
-            List<Service> services = ServiceOfProjectService.getInstance().getAllActive();
+            List<Service> services = ServicesService.getInstance().getAllActive();
             List<Category> categories = CategoryService.getInstance().getAllActiveOrderByNumOfViews();
             List<Province> provinces = ProvinceService.getInstance().getAll();
             List<PriceObjectHelper> prices = SearcherProjectUtil.PRICE_SEARCHING;

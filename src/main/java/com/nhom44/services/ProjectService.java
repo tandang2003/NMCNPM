@@ -202,5 +202,8 @@ public class ProjectService {
         }
         return project;
     }
+    public List<Integer> getAllProjectActiveId(){
+        return conn.withExtension(ProjectDAO.class, dao -> dao.getAllActiveId());
+    }
 
 }

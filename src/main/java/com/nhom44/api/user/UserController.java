@@ -83,7 +83,7 @@ public class UserController extends HttpServlet {
                 responseModel.setName("rePassword");
                 responseModel.setMessage("Mật khẩu nhập xác nhận không trùng khớp");
                 errMess.add(responseModel);
-            } else user.setPassword(StringUtil.hashPassword(password));
+            } else user.setPassword(StringUtil.hash(password));
         singleValidator = new PhoneValidator();
         if (!phone.equals(user.getPhone()))
             if (phone.equals("") || !singleValidator.validator(phone)) {
